@@ -1,0 +1,16 @@
+image: rikorose/gcc-cmake
+stages:
+  - build
+
+cache:
+  paths:
+    - "build/*"
+
+#job build
+build:
+  stage: build
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake ..
+    - cmake --build .
