@@ -1,5 +1,21 @@
 #include <vector>
 #include <iostream>
+#include <fstream>
+
+void save_grid(std::vector<bool> grid, int m, int n, int iter){
+  std::ofstream myfile;
+  std::string filename ("data/life__");
+  filename += std::to_string(iter)+".pbm";
+  myfile.open(filename);
+
+  myfile << "P1\n" << m << " " << n << '\n';
+  for (int i = 0; i < m; i++){
+    for (int j = 0; j < n; j++)
+      myfile << grid[i*n + j] << ' ';
+    myfile << '\n';
+  }
+  myfile.close();
+}
 
 int main(int argc, char const *argv[]) {
   int N, n_iter;
@@ -27,12 +43,16 @@ int main(int argc, char const *argv[]) {
   old_grid[10] = 1;
   old_grid[14] = 1;
 
-  for (int i = 0; i < N; i++){
-    for (int j = 0; j < N; j++)
-      std::cout << old_grid[i*N + j] << ' ';
-    std::cout << '\n';
-  }
-  std::cout << "------------" << '\n';
+
+
+  save_grid(old_grid, N, N, 0);
+
+  // for (int i = 0; i < N; i++){
+  //   for (int j = 0; j < N; j++)
+  //     std::cout << old_grid[i*N + j] << ' ';
+  //   std::cout << '\n';
+  // }
+  // std::cout << "------------" << '\n';
 
   // game of life
   for (int k = 0; k < n_iter; k++){
@@ -114,12 +134,14 @@ int main(int argc, char const *argv[]) {
       }
     }
     new_grid.swap(old_grid);
-    for (int i = 0; i < N; i++){
-      for (int j = 0; j < N; j++)
-        std::cout << old_grid[i*N + j] << ' ';
-      std::cout << '\n';
-    }
-    std::cout << "--------" << '\n';
+
+    save_grid(old_grid, N, N, k+1);
+    // for (int i = 0; i < N; i++){
+    //   for (int j = 0; j < N; j++)
+    //     std::cout << old_grid[i*N + j] << ' ';
+    //   std::cout << '\n';
+    // }
+    // std::cout << "--------" << '\n';
   }
 
   return 0;
