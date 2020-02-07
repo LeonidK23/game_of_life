@@ -3,6 +3,10 @@
 #include <fstream>
 #include <random>
 #include <mpi.h>
+#include <chrono>
+
+using std::chrono::system_clock;
+using std::chrono::duration;
 
 void save_grid(int* grid, int m, int n, int iter){
   std::ofstream myfile;
@@ -66,6 +70,7 @@ int main(int argc, char *argv[]) {
     save_grid(old_grid.data(), N, N, 0);
   }
 
+  auto start = system_clock::now();
   MPI_Scatter(old_grid.data(), elements_per_proc, MPI_INT, part_grid + N,
               elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -105,6 +110,9 @@ int main(int argc, char *argv[]) {
     if (rank == 0)
       save_grid(new_grid, N, N, k+1);
   }
+  auto end = system_clock::now();
+  if (rank == 0)
+    std::cout << "Elapsed time: " << duration<double>(end - start).count() << '\n';
 
   MPI_Finalize();
 
